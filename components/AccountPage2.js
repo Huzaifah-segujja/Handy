@@ -1,36 +1,52 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet,TextInput} from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, TextInput, Alert } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-import { useState } from 'react';
-import { CheckBox } from 'react-native-elements';
-
-
 
 const CreateAccountPage = ({ navigation }) => {
   const [title, setTitle] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [day, setDay] = useState('');
-  const [month, setMonth] = useState('');
-  const [year, setYear] = useState('');
   const [postcode, setPostcode] = useState('');
-  const [email, setEmail] = useState('');
-  const [confirmEmail, setConfirmEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [countryCode, setCountryCode] = useState('+44'); // Default country code
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [selectedCountryLabel, setSelectedCountryLabel] = useState('+44 UK');
 
-  const handleShowPassword = () => {
-    setShowPassword(!showPassword);
+  const handleDateChange = (event, date) => {
+    setShowDatePicker(false);
+    if (date) {
+      setSelectedDate(date);
+    }
   };
+
+  const handlePhoneNumberChange = (text) => {
+    // Remove non-digit characters from the input
+    const cleanedPhoneNumber = text.replace(/\D/g, '');
+    setPhoneNumber(cleanedPhoneNumber);
+  };
+
+  const handleSignUp = () => {
+    // Validate phone number
+    if (phoneNumber.length !== 10) {
+      Alert.alert('Error', 'Phone number must be 10 digits');
+      return;
+    }
+    // Other sign-up logic
+    navigation.navigate('AccountPage2');
+  };
+
+  const handleCountryCodeChange = (itemValue, itemIndex) => {
+    setCountryCode(itemValue);
+    setSelectedCountryLabel(itemIndex === 0 ? '+44 UK' : '+353 IE');
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.Logo}>Logo</Text>
-       <Text style={styles.title}>Create an Account</Text>
-       <Text style={styles.Headings}>{title || 'Please Select'}</Text> 
-       
-        <Picker
+      <Text style={styles.title}>Additional Info</Text>
+      <Text style={styles.Headings}>Title</Text>
+      <Picker
         selectedValue={title}
         style={[styles.input, styles.picker]}
         onValueChange={(itemValue) => setTitle(itemValue)}
@@ -42,7 +58,7 @@ const CreateAccountPage = ({ navigation }) => {
         <Picker.Item label="Dr" value="Dr" />
         <Picker.Item label="Prefer not to say" value="Prefer not to say" />
       </Picker>
-        <TextInput
+      <TextInput
         style={styles.input}
         placeholder="First Name"
         onChangeText={(text) => setFirstName(text)}
@@ -54,39 +70,41 @@ const CreateAccountPage = ({ navigation }) => {
         onChangeText={(text) => setLastName(text)}
         value={lastName}
       />
+
+      <TouchableOpacity
+        style={[styles.input, styles.datePicker]}
+        onPress={() => setShowDatePicker(true)}>
+        <Text>{selectedDate ? selectedDate.toDateString() : 'Date of Birth'}</Text>
+      </TouchableOpacity>
+
+      {/* Country Code and Phone Number */}
       <View style={styles.row}>
+        <Picker
+          selectedValue={countryCode}
+          style={[styles.input, styles.countryCodePicker]}
+          onValueChange={handleCountryCodeChange}
+        >
+          <Picker.Item label="+44 UK" value="+44" />
+          <Picker.Item label="+353 IE" value="+353" />
+        </Picker>
         <TextInput
-          style={[styles.input, styles.smallInput]}
-          placeholder="Day"
-          onChangeText={(text) => setDay(text)}
-          value={day}
-        />
-        <TextInput
-          style={[styles.input, styles.smallInput]}
-          placeholder="Month"
-          onChangeText={(text) => setMonth(text)}
-          value={month}
-        />
-        <TextInput
-          style={[styles.input, styles.smallInput]}
-          placeholder="Year"
-          onChangeText={(text) => setYear(text)}
-          value={year}
+          style={[styles.input, styles.phoneNumberInput]}
+          placeholder="Phone Number"
+          keyboardType="phone-pad"
+          onChangeText={handlePhoneNumberChange}
+          value={phoneNumber}
         />
       </View>
-
       <TextInput
         style={styles.input}
         placeholder="Postcode"
         onChangeText={(text) => setPostcode(text)}
         value={postcode}
       />
-      <TouchableOpacity style={styles.button} onPress={() => {}}>
+
+      <TouchableOpacity style={styles.button} onPress={handleSignUp}>
         <Text style={styles.buttonText}>Find address</Text>
       </TouchableOpacity>
-
-     
-
     </View>
   );
 };
@@ -97,7 +115,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fff',
-    
   },
   title: {
     fontSize: 24,
@@ -107,7 +124,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     marginBottom: 20,
     top: 20, // Adjust top position as needed
-    right: 100, // Align the picker to the right
+    right: 140, // Align the picker to the right
   },
   Logo: {
     fontSize: 24,
@@ -121,16 +138,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginBottom: 20,
     paddingHorizontal: 10,
-    right: 10,
-    
-  },
-  smallInput: {
-    flex: 1,
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 20,
   },
   button: {
     backgroundColor: '#007bff',
@@ -139,21 +146,26 @@ const styles = StyleSheet.create({
     minWidth: 200,
     alignItems: 'center',
     marginBottom: 20,
-    right:65,
   },
   buttonText: {
     color: '#fff',
     fontSize: 18,
   },
-  showPasswordText: {
+  datePicker: {
+    justifyContent: 'center',
+  },
+  countryCodePicker: {
+    flex: 1,
     marginRight: 10,
   },
-  picker: {
-    position: 'absolute', // Position the picker absolutely
-    top: 120, // Adjust top position as needed
-    right: 180, // Align the picker to the right
-    height: '100%', // Match the height of the input
-    width: 50, // Adjust width as needed
+  phoneNumberInput: {
+    flex: 3,
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+    width: '80%',
   },
 });
 

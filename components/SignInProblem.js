@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-
+import Data from './DataClass'; // Import the Data class from DataClass.js
 const SignInProb = ({ navigation }) => {
   const [email, setEmail] = useState('');
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-
+import Data from './DataClass'; // Import the Data class from DataClass.js
 
 
 const LoginPageComponent = ({ navigation }) => {

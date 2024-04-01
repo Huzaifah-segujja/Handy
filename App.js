@@ -11,6 +11,7 @@ import SignInPage from './components/SignInPage';
 import CreateAccountPage from './components/CreateAccountPage';
 import SignInProblem from './components/SignInProblem';
 import AccountPage2 from './components/AccountPage2';
+import DataClass from './components/DataClass';
 const Stack = createStackNavigator();
 
 const App = () => {
@@ -22,6 +23,7 @@ const App = () => {
         <Stack.Screen name="CreateAccountPage" component={CreateAccountPage} />
         <Stack.Screen name="SignInProblem" component={SignInProblem} />
         <Stack.Screen name="AccountPage2" component={AccountPage2} />
+        <Stack.Screen name="DataClass" component={DataClass} />
       </Stack.Navigator>
     </NavigationContainer>
   );

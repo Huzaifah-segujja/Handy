@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native'; // Import useNavigation hook
-
+import Data from './DataClass'; // Import the Data class from DataClass.js
 const SignIn = () => {
   const navigation = useNavigation(); // Use useNavigation hook to get navigation object
 

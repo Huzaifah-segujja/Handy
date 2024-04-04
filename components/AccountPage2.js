@@ -48,7 +48,7 @@ const CreateAccountPage = ({ navigation }) => {
     console.log('Updated Data:', Data);
 
     // Other sign-up logic
-    navigation.navigate('AccountPage2');
+    navigation.navigate('MainPage.js');
   };
 
   const handleCountryCodeChange = (value) => {

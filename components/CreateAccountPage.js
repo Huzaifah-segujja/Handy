@@ -23,7 +23,25 @@ const CreateAccountPage = ({ navigation }) => {
   const handleSignUp = () => {
     // Validate email, confirm email, password, and confirm password
     // (omitting validation logic for brevity)
+    if (!isValidEmail(email)) {
+    Alert.alert('Invalid Email', 'Please enter a valid email address.');
+    return;
+  }
 
+  if (email !== confirmEmail) {
+    Alert.alert('Emails do not match', 'Please make sure your email addresses match.');
+    return;
+  }
+
+  if (!isValidPassword(password)) {
+    Alert.alert('Invalid Password', 'Your password must be at least 8 characters long.');
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    Alert.alert('Passwords do not match', 'Please make sure your passwords match.');
+    return;
+  }
     // Set email and password in Data class
     Data._email = email;
     Data._password = password;
